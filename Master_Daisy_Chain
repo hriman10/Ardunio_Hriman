@@ -1,0 +1,82 @@
+////MASTER////
+#include <SPI.h>
+
+int ledPin = 7;
+int pushButton1 = 2;
+int pushButton2 = 3;
+int buttonValue1;
+int buttonValue2;
+int x = 0;
+
+void setup()
+{
+    // Serial.begin(9600);
+    pinMode(pushButton1, INPUT);
+    pinMode(pushButton2, INPUT);
+    pinMode(ledPin, OUTPUT);
+    digitalWrite(ledPin, LOW);
+    SPI.begin();
+    SPI.setClockDivider(SPI_CLOCK_DIV8);
+    digitalWrite(SS, HIGH);
+}
+
+void loop()
+{
+    byte Mastersend, Mastereceive;
+    buttonValue1 = digitalRead(pushButton1);
+    buttonValue2 = digitalRead(pushButton2);
+    if (buttonValue1 == HIGH)
+    {
+
+        x = 1;
+        digitalWrite(ledPin, HIGH);
+        delay(100);
+        digitalWrite(ledPin, LOW);
+        delay(100);
+        digitalWrite(SS, LOW);
+        Mastereceive = SPI.transfer(x);
+        // Serial.println(x);
+        delay(10);
+        digitalWrite(SS, HIGH);
+    }
+    else if (buttonValue2 == HIGH)
+    {
+
+        x = 2;
+        digitalWrite(ledPin, HIGH);
+        delay(100);
+        digitalWrite(ledPin, LOW);
+        delay(100);
+        digitalWrite(SS, LOW);
+        Mastereceive = SPI.transfer(x);
+        // Serial.println(x);
+        delay(10);
+        digitalWrite(SS, HIGH);
+    }
+    else
+    {
+        x = 0;
+        digitalWrite(SS, LOW);
+        Mastereceive = SPI.transfer(x);
+        // Serial.println(x);
+        delay(10);
+        digitalWrite(SS, HIGH);
+    }
+
+    if (Mastereceive == 3)
+    {
+        digitalWrite(ledPin, HIGH);
+        delay(100);
+        digitalWrite(ledPin, LOW);
+        delay(100);
+        digitalWrite(ledPin, HIGH);
+        delay(100);
+        digitalWrite(ledPin, LOW);
+        delay(100);
+        digitalWrite(ledPin, HIGH);
+        delay(100);
+        digitalWrite(ledPin, LOW);
+        delay(100);
+        // Serial.println(Mastereceive);
+    }
+}
